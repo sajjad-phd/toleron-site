@@ -1,31 +1,420 @@
-<!doctype html>
-<html lang="de">
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Toleron – Demnächst verfügbar</title>
-  <!-- تا وقتی صفحه نهایی آماده نیست، نذار تو گوگل ایندکس بشه -->
-  <meta name="robots" content="noindex, nofollow" />
+  <title>Toleron — Precision AI for Machining</title>
+  <meta name="description" content="Toleron blends machine data, edge AI, and intuitive dashboards to predict quality, prevent downtime, and optimize machining processes." />
+  <meta name="theme-color" content="#0b0f19" />
+
+  <!-- Open Graph / SEO -->
+  <meta property="og:title" content="Toleron — Precision AI for Machining" />
+  <meta property="og:description" content="Predict quality. Prevent downtime. Optimize machining." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.toleron.de/" />
+  <meta property="og:image" content="https://www.toleron.de/og.png" />
+  <link rel="canonical" href="https://www.toleron.de/" />
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="%230b0f19"/><path d="M28 26h44v10H56v38H44V36H28z" fill="url(%23g)"/><defs><linearGradient id="g" x1="28" y1="26" x2="72" y2="74" gradientUnits="userSpaceOnUse"><stop stop-color="%23a1ffce"/><stop offset="0.5" stop-color="%232dd4bf"/><stop offset="1" stop-color="%2360a5fa"/></linearGradient></defs></svg>' />
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9aa4b2; --brand:#31c0d5; }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; display:flex; align-items:center; justify-content:center;
-      background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, Arial, sans-serif;
+    :root {
+      --bg: #0b0f19;            /* near-black */
+      --surface: #0f1629;       /* deep navy */
+      --card: #111a2e;          /* card background */
+      --text: #e6e9f2;          /* primary text */
+      --muted: #9aa3b2;         /* secondary text */
+      --line: #1f2a44;          /* subtle borders */
+      --accent: #7cd4ff;        /* light accent */
+      --accent-2: #2dd4bf;      /* teal */
+      --accent-3: #60a5fa;      /* blue */
+      --glow-a: 0 0 60px rgba(45, 212, 191, 0.25);
+      --glow-b: 0 0 60px rgba(96, 165, 250, 0.25);
+      --radius: 16px;
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.35);
+      --container: 1200px;
     }
-    main{ text-align:center; padding:48px 24px }
-    h1{ margin:0 0 8px; font-size:42px; letter-spacing:.5px; }
-    h2{ margin:0 0 16px; font-size:24px; color:var(--brand); font-weight:600; }
-    p{ margin:0; font-size:18px; color:var(--muted) }
-    @media (min-width:768px){ h1{font-size:56px} h2{font-size:28px} p{font-size:20px} }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8ff;
+        --surface: #ffffff;
+        --card: #ffffff;
+        --text: #0b0f19;
+        --muted: #546176;
+        --line: #e9eef6;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; } 
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(96,165,250,0.18), transparent 60%),
+                  radial-gradient(1000px 600px at 10% 0%, rgba(45,212,191,0.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+    /* ======= Nav ======= */
+    .nav {
+      position: sticky; top: 0; z-index: 40; backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg), transparent 60%);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; padding: 14px 0; }
+    .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color: var(--text); }
+    .brand svg { width: 34px; height: 34px; filter: drop-shadow(var(--glow-a)); }
+    .brand span { font-weight: 700; letter-spacing: 0.4px; font-size: 18px; }
+    .nav-links { display:flex; gap: 18px; align-items:center; }
+    .nav-links a { color: var(--muted); text-decoration:none; font-weight: 500; padding: 8px 10px; border-radius: 10px; }
+    .nav-links a:hover { color: var(--text); background: color-mix(in oklab, var(--card), transparent 45%); }
+    
+    /* Language switcher */
+    .lang-switcher { display:flex; gap: 4px; align-items:center; }
+    .lang-btn { padding: 6px 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: color-mix(in oklab, var(--card), transparent 20%); color: var(--muted); transition: all 0.2s ease; }
+    .lang-btn.active { background: var(--accent-2); color: #06111a; border-color: var(--accent-2); }
+    .lang-btn:hover:not(.active) { color: var(--text); background: color-mix(in oklab, var(--card), transparent 35%); }
+
+    .btn { display:inline-flex; align-items:center; gap:10px; padding: 12px 16px; border-radius: 14px; font-weight: 600; text-decoration:none; cursor:pointer; border: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in oklab, var(--card), transparent 15%), color-mix(in oklab, var(--card), transparent 0%)); }
+    .btn-primary { border: none; color: #06111a; background: linear-gradient(90deg, var(--accent-2), var(--accent-3)); box-shadow: var(--glow-a), var(--glow-b); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(45,212,191,0.28), 0 10px 30px rgba(96,165,250,0.28); }
+
+    /* ======= Hero ======= */
+    .hero { padding: 72px 0 48px; position: relative; overflow: hidden; }
+    .badge { display:inline-flex; align-items:center; gap:8px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight:600; border: 1px solid var(--line); color: var(--muted); background: color-mix(in oklab, var(--card), transparent 35%); }
+    .badge .dot { width: 8px; height: 8px; border-radius:999px; background: var(--accent-2); box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent-2), transparent 75%); }
+    .hero h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.06; margin: 18px 0 16px; letter-spacing: -0.02em; }
+    .gradient-text { background: linear-gradient(90deg, #a1ffce, #2dd4bf 40%, #60a5fa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { color: var(--muted); font-size: clamp(16px, 2.4vw, 20px); max-width: 800px; margin: 0 auto 26px; }
+    .cta { display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap: wrap; margin-top: 10px; }
+
+    .hero-card {
+      margin-top: 36px; border: 1px solid var(--line); border-radius: 22px; padding: 18px; background: linear-gradient(180deg, color-mix(in oklab, var(--card), transparent 8%), color-mix(in oklab, var(--surface), transparent 0%));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stats { display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+    .stat { padding:18px; border-radius: 16px; border:1px solid var(--line); background: color-mix(in oklab, var(--card), transparent 12%); text-align:center; }
+    .stat .num { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+    .stat .cap { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; }
+
+    /* ======= Sections ======= */
+    section { padding: 72px 0; }
+    .section-head { text-align:center; margin-bottom: 28px; }
+    .eyebrow { color: var(--muted); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; }
+    h2 { font-size: clamp(26px, 4.6vw, 42px); margin: 8px 0 10px; letter-spacing: -0.02em; }
+    .lead { max-width: 820px; margin: 0 auto; color: var(--muted); }
+
+    .grid { display:grid; gap: 18px; }
+    @media (min-width: 900px){ .grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 680px){ .grid.cols-2 { grid-template-columns: repeat(2, 1fr); } }
+
+    .card { border:1px solid var(--line); border-radius: 18px; padding: 20px; background: linear-gradient(180deg, color-mix(in oklab, var(--card), transparent 10%), color-mix(in oklab, var(--surface), transparent 0%)); }
+    .card h3 { margin: 10px 0 6px; font-size: 20px; }
+    .card p { color: var(--muted); }
+    .icon { width: 22px; height: 22px; display:inline-block; }
+    .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; background: color-mix(in oklab, var(--card), transparent 10%); border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 12px; }
+
+    /* How it works timeline */
+    .timeline { display:grid; gap: 18px; position: relative; }
+    @media (min-width: 760px){ .timeline { grid-template-columns: repeat(4, 1fr); } }
+    .step { position:relative; padding: 18px; border:1px solid var(--line); border-radius: 18px; background: color-mix(in oklab, var(--card), transparent 8%); }
+    .step .num { width: 28px; height: 28px; border-radius: 10px; display:grid; place-items:center; font-weight:700; color:#06111a; background: linear-gradient(90deg, var(--accent-2), var(--accent-3)); }
+
+    /* Footer */
+    footer { padding: 36px 0 60px; border-top: 1px solid var(--line); background: color-mix(in oklab, var(--surface), transparent 0%); }
+    .foot { display:flex; flex-direction: column; gap: 16px; }
+    @media (min-width: 820px){ .foot { flex-direction: row; justify-content: space-between; align-items:center; } }
+    .foot a { color: var(--muted); text-decoration:none; }
+
+    /* Subtle reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; }
+      .btn-primary:hover { transform: none; }
+    }
   </style>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Toleron",
+    "url": "https://www.toleron.de/",
+    "logo": "https://www.toleron.de/og.png",
+    "sameAs": [],
+    "description": "AI for precision machining: monitoring, anomaly detection, and quality prediction",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "email": "hello@toleron.de",
+      "areaServed": "DE, EU"
+    }]
+  }
+  </script>
 </head>
 <body>
-  <main>
-    <h1>Toleron</h1>
-    <h2>Toleron-Lösungen</h2>
-    <p>Kommt bald …</p>
-  </main>
+  <!-- ======= NAV ======= -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="Toleron home">
+        <!-- Logo mark -->
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#a1ffce" />
+              <stop offset="50%" stop-color="#2dd4bf" />
+              <stop offset="100%" stop-color="#60a5fa" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#lg)" stroke-width="2.5" />
+          <path d="M18 18h28v8H34v28h-8V26H18z" fill="url(#lg)" />
+        </svg>
+        <span>Toleron</span>
+      </a>
+      <div class="nav-links">
+        <a href="#solutions" data-en="Solutions" data-de="Lösungen">Solutions</a>
+        <a href="#how" data-en="How it works" data-de="Funktionsweise">How it works</a>
+        <a href="#contact" data-en="Contact" data-de="Kontakt">Contact</a>
+        <div class="lang-switcher">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="de">DE</button>
+        </div>
+        <a class="btn btn-primary" data-mail href="#" data-en="Get early access" data-de="Frühen Zugang erhalten">Get early access</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======= HERO ======= -->
+  <header id="top" class="hero container">
+    <div class="section-head reveal">
+      <span class="badge" data-en="Built for production floors" data-de="Für Produktionshallen entwickelt"><span class="dot"></span> Built for production floors</span>
+      <h1><span class="gradient-text" data-en="Precision AI for Machining" data-de="Präzisions-KI für die Bearbeitung">Precision AI for Machining</span></h1>
+      <p data-en="Connect your CNCs, learn from real machine signals, and act in real time. Toleron predicts surface quality, flags anomalies, and helps you hit tolerance — first time, every time." data-de="Verbinden Sie Ihre CNC-Maschinen, lernen Sie aus echten Maschinensignalen und handeln Sie in Echtzeit. Toleron sagt Oberflächenqualität voraus, erkennt Anomalien und hilft Ihnen, Toleranzen zu treffen — beim ersten Mal, jedes Mal.">Connect your CNCs, learn from real machine signals, and act in real time. Toleron predicts surface quality, flags anomalies, and helps you hit tolerance — first time, every time.</p>
+      <div class="cta">
+        <a class="btn btn-primary" data-mail href="#" data-en="Request a demo" data-de="Demo anfordern">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          Request a demo
+        </a>
+        <a class="btn" href="#solutions" data-en="Explore solutions" data-de="Lösungen erkunden">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Explore solutions
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-card reveal">
+      <div class="stats">
+        <div class="stat"><div class="num">1 kHz+</div><div class="cap" data-en="Signal sampling" data-de="Signalerfassung">Signal sampling</div></div>
+        <div class="stat"><div class="num">↓ 30%</div><div class="cap" data-en="Scrap & rework" data-de="Ausschuss & Nacharbeit">Scrap & rework</div></div>
+        <div class="stat"><div class="num">↑ OEE</div><div class="cap" data-en="Across critical cells" data-de="Über kritische Zellen">Across critical cells</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======= SOLUTIONS ======= -->
+  <section id="solutions">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-en="Solutions" data-de="Lösungen">Solutions</div>
+        <h2 data-en="From raw signals to reliable parts" data-de="Von rohen Signalen zu zuverlässigen Teilen">From raw signals to reliable parts</h2>
+        <p class="lead" data-en="Your data becomes a competitive edge. Toleron learns the fingerprint of a healthy process and predicts outcomes before they go out of spec." data-de="Ihre Daten werden zu einem Wettbewerbsvorteil. Toleron lernt den Fingerabdruck eines gesunden Prozesses und sagt Ergebnisse voraus, bevor sie außerhalb der Spezifikation liegen.">Your data becomes a competitive edge. Toleron learns the fingerprint of a healthy process and predicts outcomes before they go out of spec.</p>
+      </div>
+
+      <div class="grid cols-3">
+        <article class="card reveal">
+          <span class="chip">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <span data-en="Machine Monitoring" data-de="Maschinenüberwachung">Machine Monitoring</span>
+          </span>
+          <h3 data-en="Live machine insights" data-de="Live-Maschineneinblicke">Live machine insights</h3>
+          <p data-en="Stream torque, current, power and vibration in real time. See trends, drift, and stability at a glance — across spindles and axes." data-de="Streamen Sie Drehmoment, Strom, Leistung und Vibration in Echtzeit. Sehen Sie Trends, Drift und Stabilität auf einen Blick — über Spindeln und Achsen.">Stream torque, current, power and vibration in real time. See trends, drift, and stability at a glance — across spindles and axes.</p>
+        </article>
+
+        <article class="card reveal">
+          <span class="chip">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20l9-16-9 6-9-6 9 16z"/></svg>
+            <span data-en="Anomaly Detection" data-de="Anomalieerkennung">Anomaly Detection</span>
+          </span>
+          <h3 data-en="Spot issues before downtime" data-de="Probleme vor Ausfallzeiten erkennen">Spot issues before downtime</h3>
+          <p data-en="Self‑learning models flag misalignment, tool wear, and chatter patterns early — so you can correct before scrap piles up." data-de="Selbstlernende Modelle erkennen Fehlausrichtung, Werkzeugverschleiß und Rattern frühzeitig — damit Sie korrigieren können, bevor sich Ausschuss ansammelt.">Self‑learning models flag misalignment, tool wear, and chatter patterns early — so you can correct before scrap piles up.</p>
+        </article>
+
+        <article class="card reveal">
+          <span class="chip">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M7 12h10M12 7v10"/></svg>
+            <span data-en="Quality Prediction" data-de="Qualitätsvorhersage">Quality Prediction</span>
+          </span>
+          <h3 data-en="Predict surface roughness" data-de="Oberflächenrauheit vorhersagen">Predict surface roughness</h3>
+          <p data-en="Use high‑frequency signals to forecast <em>Ra</em> before measurement — and automatically tune parameters to hit target finish." data-de="Verwenden Sie hochfrequente Signale, um <em>Ra</em> vor der Messung vorherzusagen — und passen Sie Parameter automatisch an, um das Ziel-Finish zu erreichen.">Use high‑frequency signals to forecast <em>Ra</em> before measurement — and automatically tune parameters to hit target finish.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= HOW IT WORKS ======= -->
+  <section id="how">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-en="How it works" data-de="Funktionsweise">How it works</div>
+        <h2 data-en="Edge‑ready. Shop‑floor proof." data-de="Edge‑bereit. Produktionshallen‑erprobt.">Edge‑ready. Shop‑floor proof.</h2>
+        <p class="lead" data-en="Connect via OPC UA, learn on your data, and deploy models on the edge. Insights flow straight into your dashboards." data-de="Verbinden Sie sich über OPC UA, lernen Sie aus Ihren Daten und stellen Sie Modelle am Edge bereit. Erkenntnisse fließen direkt in Ihre Dashboards.">Connect via OPC UA, learn on your data, and deploy models on the edge. Insights flow straight into your dashboards.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="step reveal">
+          <div class="num">1</div>
+          <h3 data-en="Connect" data-de="Verbinden">Connect</h3>
+          <p data-en="OPC UA to SINUMERIK / PLCs. Stream signals (torque, current, position, speed) at high frequency." data-de="OPC UA zu SINUMERIK / SPS. Streamen Sie Signale (Drehmoment, Strom, Position, Geschwindigkeit) mit hoher Frequenz.">OPC UA to SINUMERIK / PLCs. Stream signals (torque, current, position, speed) at high frequency.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">2</div>
+          <h3 data-en="Learn" data-de="Lernen">Learn</h3>
+          <p data-en="Clean, align, and label time‑series. Train robust models (ANN/LSTM) tailored to your process." data-de="Bereinigen, ausrichten und beschriften Sie Zeitreihen. Trainieren Sie robuste Modelle (ANN/LSTM), die auf Ihren Prozess zugeschnitten sind.">Clean, align, and label time‑series. Train robust models (ANN/LSTM) tailored to your process.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">3</div>
+          <h3 data-en="Predict" data-de="Vorhersagen">Predict</h3>
+          <p data-en="Run models on an edge box for low‑latency predictions. Monitor confidence and drift." data-de="Führen Sie Modelle auf einer Edge-Box für Vorhersagen mit niedriger Latenz aus. Überwachen Sie Vertrauen und Drift.">Run models on an edge box for low‑latency predictions. Monitor confidence and drift.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">4</div>
+          <h3 data-en="Act" data-de="Handeln">Act</h3>
+          <p data-en="Push alerts, suggest parameters, and close the loop to reduce scrap and increase OEE." data-de="Senden Sie Alerts, schlagen Sie Parameter vor und schließen Sie die Schleife, um Ausschuss zu reduzieren und OEE zu erhöhen.">Push alerts, suggest parameters, and close the loop to reduce scrap and increase OEE.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CTA / CONTACT ======= -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-en="Get in touch" data-de="Kontakt aufnehmen">Get in touch</div>
+        <h2 data-en="Let's bring AI to your machining line" data-de="Bringen wir KI in Ihre Bearbeitungslinie">Let's bring AI to your machining line</h2>
+        <p class="lead" data-en="Pilot with us and turn your machine data into measurable gains within weeks." data-de="Pilotieren Sie mit uns und verwandeln Sie Ihre Maschinendaten innerhalb von Wochen in messbare Gewinne.">Pilot with us and turn your machine data into measurable gains within weeks.</p>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card reveal">
+          <h3 data-en="Early access" data-de="Früher Zugang">Early access</h3>
+          <p data-en="Interested in a pilot or a demo? Send us a note — we'll follow up quickly." data-de="Interessiert an einem Pilot oder einer Demo? Senden Sie uns eine Nachricht — wir melden uns schnell zurück.">Interested in a pilot or a demo? Send us a note — we'll follow up quickly.</p>
+          <p><a class="btn btn-primary" data-mail href="#" data-en="Email us" data-de="E-Mail senden">Email us</a></p>
+          <p class="muted" style="color:var(--muted)" data-en="We'll never share your email." data-de="Wir teilen Ihre E-Mail niemals.">We'll never share your email.</p>
+        </div>
+
+        <div class="card reveal">
+          <h3 data-en="Why Toleron" data-de="Warum Toleron">Why Toleron</h3>
+          <ul style="margin:0; padding-left: 18px; color:var(--muted)">
+            <li data-en="Built by machinists & data scientists" data-de="Entwickelt von Maschinenbauern & Datenwissenschaftlern">Built by machinists & data scientists</li>
+            <li data-en="Edge‑first, low‑latency deployment" data-de="Edge‑first, niedrige Latenz-Bereitstellung">Edge‑first, low‑latency deployment</li>
+            <li data-en="Clear ROI: less scrap, more throughput" data-de="Klarer ROI: weniger Ausschuss, mehr Durchsatz">Clear ROI: less scrap, more throughput</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer>
+    <div class="container foot">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <strong>Toleron</strong>
+        <span style="color:var(--muted)">© <span id="y"></span></span>
+      </div>
+      <div style="display:flex; gap: 18px; flex-wrap:wrap;">
+        <a href="#" aria-disabled="true" style="opacity:.7" data-en="Impressum" data-de="Impressum">Impressum</a>
+        <a href="#" aria-disabled="true" style="opacity:.7" data-en="Privacy" data-de="Datenschutz">Privacy</a>
+        <a data-mail href="#">hello@toleron.de</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Language switching
+    let currentLang = 'en';
+    
+    function switchLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.setAttribute('data-lang', lang);
+      document.documentElement.setAttribute('lang', lang);
+      
+      // Update language buttons
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      
+      // Update all elements with language data
+      document.querySelectorAll('[data-en][data-de]').forEach(el => {
+        const text = el.dataset[lang];
+        if (text) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.value = text;
+          } else {
+            el.textContent = text;
+          }
+        }
+      });
+      
+      // Update page title and meta description
+      if (lang === 'de') {
+        document.title = 'Toleron — Präzisions-KI für die Bearbeitung';
+        document.querySelector('meta[name="description"]').content = 'Toleron verbindet Maschinendaten, Edge-KI und intuitive Dashboards, um Qualität vorherzusagen, Ausfallzeiten zu verhindern und Bearbeitungsprozesse zu optimieren.';
+        document.querySelector('meta[property="og:title"]').content = 'Toleron — Präzisions-KI für die Bearbeitung';
+        document.querySelector('meta[property="og:description"]').content = 'Qualität vorhersagen. Ausfallzeiten verhindern. Bearbeitung optimieren.';
+      } else {
+        document.title = 'Toleron — Precision AI for Machining';
+        document.querySelector('meta[name="description"]').content = 'Toleron blends machine data, edge AI, and intuitive dashboards to predict quality, prevent downtime, and optimize machining processes.';
+        document.querySelector('meta[property="og:title"]').content = 'Toleron — Precision AI for Machining';
+        document.querySelector('meta[property="og:description"]').content = 'Predict quality. Prevent downtime. Optimize machining.';
+      }
+      
+      // Save language preference
+      localStorage.setItem('toleron-lang', lang);
+    }
+    
+    // Initialize language from localStorage or default to 'en'
+    const savedLang = localStorage.getItem('toleron-lang') || 'en';
+    switchLanguage(savedLang);
+    
+    // Add click handlers to language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchLanguage(btn.dataset.lang);
+      });
+    });
+
+    // Email obfuscation
+    const user = 'hello';
+    const domain = 'toleron.de';
+    for (const el of document.querySelectorAll('[data-mail]')) {
+      const addr = user + '@' + domain;
+      el.setAttribute('href', 'mailto:' + addr);
+      if (!el.textContent.trim() || el.textContent.includes('@')) el.textContent = addr;
+    }
+
+    // Current year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
 </body>
 </html>
